@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const request = require("request");
+// const request = require("request");
 const https = require("https");
 
 const app = express();
@@ -36,16 +36,26 @@ app.post("/", (req, res) => {
 
   const options = {
     method: "POST",
-    auth: "manny:91ce4c3616cfb87b37230f4d8e60add7-us19",
+    auth: "manny1:91ce4c3616cfb87b37230f4d8e60add7-us19",
   };
+
   const request = https.request(url, options, (response) => {
-    response.on("data", (data) => {
-      console.log(JSON.parse(data));
-    });
+    if (response.statusCode == 200) {
+      res.sendFile(__dirname + "/success.html");
+    } else {
+      res.sendFile(__dirname + "/failure.html");
+    }
+    // response.on("data", (data) => {
+    //   console.log(JSON.parse(data));
+    // });
   });
 
   request.write(jsonData);
-  request.end;
+  request.end();
+});
+
+app.post("/failure", (req, res) => {
+  res.redirect("/");
 });
 
 app.listen(3000, () => {
